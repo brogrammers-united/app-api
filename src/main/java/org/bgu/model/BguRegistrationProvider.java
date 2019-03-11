@@ -1,22 +1,26 @@
 package org.bgu.model;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public enum BguRegistrationProvider implements RegistrationProvider {
 	
-	CLI("bgu-cli", "cli"), WEB_APP("bgu-web-app", "web-app"), GITHUB("github", "github");
+	CLI("bgu-cli", "client_credentials"), WEB_APP("bgu-web-app", "authorization_code,password"), GITHUB("github", "authorization_code");
 	
 	private final String registrationId;
-	private final String provider;
+	private final String grantType;
 	
-	BguRegistrationProvider(final String registrationId, final String provider) {
+	BguRegistrationProvider(final String registrationId, final String grantType) {
 		this.registrationId = registrationId;
-		this.provider = provider;
+		this.grantType = grantType;
 	}
 	
 	public String getRegistrationId() {
 		return registrationId;
 	}
 	
-	public String getProvider() {
-		return provider;
+	public Set<String> getGrantType() {
+		return Arrays.stream(grantType.split(",")).collect(Collectors.toSet());
 	}
 }

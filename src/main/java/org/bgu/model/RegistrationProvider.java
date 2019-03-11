@@ -1,7 +1,9 @@
 package org.bgu.model;
 
+import java.util.Set;
+
 public interface RegistrationProvider {
 
 	String getRegistrationId();
-	String getProvider();
+	Set<String> getGrantType();
 }

@@ -27,21 +27,6 @@ public abstract class BaseMongoTest {
 	
 	protected final MongoTemplate template;
 	
-	protected final ApplicationClientDetails clientDetails = new ApplicationClientDetails(
-			"bgu-cli-client",
-			"cli",
-			"BGU CLI Application",
-			"bgu-cli-secret",
-			"resource_a,resource_b",
-			"cli:admin",
-			"client_credentials",
-			"http://localhost:8080/home",
-			"ROLE_CLI_ADMIN",
-			600,
-			3600,
-			Collections.emptyMap()
-		);
-	
 	protected final ApplicationUser user = new ApplicationUser(
 				"test_user",
 				"password",
@@ -49,10 +34,11 @@ public abstract class BaseMongoTest {
 				"Test User",
 				"test@test.com",
 				true,
-				false,
+				true,
 				true,
 				true,
 				Collections.emptyMap(),
+				false,
 				BguRegistrationProvider.WEB_APP
 			);
 	
@@ -79,11 +65,13 @@ public abstract class BaseMongoTest {
 	@Before
 	public void setUpCollections() {
 		createCollectionIfNotExists(ApplicationClientDetails.class);
+		createCollectionIfNotExists(ApplicationUser.class);
 	}
 	
 	@After
 	public void tearDownCollections() {
 		dropCollectionIfExists(ApplicationClientDetails.class);
+		dropCollectionIfExists(ApplicationUser.class);
 	}
 	
 	protected final void createCollectionIfNotExists(Class<?> clazz) {

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bgu.model.BguRegistrationProvider;
 import org.bgu.model.RegistrationProvider;
 import org.bgu.model.UserAuthority;
 import org.bgu.model.interfaces.BguUserDetails;
@@ -58,12 +59,13 @@ public class ApplicationUser implements OAuth2User, Verifiable, BguUserDetails {
 
 	private boolean mfaEnabled;
 
-	private final RegistrationProvider registrationProvider;
+	@JsonIgnore
+	private final BguRegistrationProvider registrationProvider;
 
 	@PersistenceConstructor
 	public ApplicationUser(String username, String password, String authorities, String name, String email,
 			boolean enabled, boolean accountNonLocked, boolean accountNonExpired, boolean credentialsNonExpired,
-			Map<String, Object> attributes, RegistrationProvider registrationProvider) {
+			Map<String, Object> attributes, boolean mfaEnabled, BguRegistrationProvider registrationProvider) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -75,7 +77,7 @@ public class ApplicationUser implements OAuth2User, Verifiable, BguUserDetails {
 		this.accountNonExpired = accountNonExpired;
 		this.credentialsNonExpired = credentialsNonExpired;
 		this.attributes = attributes;
-		this.mfaEnabled = false;
+		this.mfaEnabled = mfaEnabled;
 		this.registrationProvider = registrationProvider;
 	}
 
@@ -174,7 +176,7 @@ public class ApplicationUser implements OAuth2User, Verifiable, BguUserDetails {
 	public void setMfaEnabled(boolean mfaEnabled) {
 		this.mfaEnabled = mfaEnabled;
 	}
-
+	
 	public RegistrationProvider getRegistrationProvider() {
 		return registrationProvider;
 	}

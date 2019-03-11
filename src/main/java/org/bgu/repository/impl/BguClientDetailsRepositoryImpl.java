@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.bgu.model.oauth.ApplicationClientDetails;
 import org.bgu.repository.BguClientDetailsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,6 +16,7 @@ public class BguClientDetailsRepositoryImpl implements BguClientDetailsRepositor
 
 	private final MongoTemplate template;
 	
+	@Autowired
 	public BguClientDetailsRepositoryImpl(final MongoTemplate template) {
 		this.template = template;
 	}

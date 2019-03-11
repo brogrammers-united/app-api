@@ -2,6 +2,7 @@ package org.bgu.service.oauth;
 
 import org.bgu.model.oauth.ApplicationClientDetails;
 import org.bgu.repository.BguClientDetailsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ public class BguClientDetailsService implements ClientDetailsService {
 
 	private final BguClientDetailsRepository repo;
 	
+	@Autowired
 	public BguClientDetailsService(final BguClientDetailsRepository repo) {
 		this.repo = repo;
 	}
