@@ -10,6 +10,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
+/**
+ * @author William
+ *
+ *	Jackson deserializer to pull necessary information from the GH user info response
+ */
 public class UserInfoRequestDeserializer extends StdDeserializer<UserInfoRequest> {
 	
 	private static final long serialVersionUID = 1L;

@@ -46,14 +46,23 @@ public class AuthController {
 		return userInfo;
 	}
 	
+	/*
+	 * Helper method to initiate authorization_code flow
+	 */
 	private ResponseEntity<OAuth2AccessToken> makeInitialResponse(final BguClientRegistrationDetails details, final String code, final String state) {
 		return restTemplate.exchange("https://github.com/login/oauth/access_token", HttpMethod.POST, getInitialRequestHeaders(details, code, state), OAuth2AccessToken.class);
 	}
 	
+	/*
+	 * Helper method to get user information from GH API
+	 */
 	private ResponseEntity<UserInfoRequest> makeUserInfoRequest(final String token) {
 		return restTemplate.exchange(UriComponentsBuilder.fromHttpUrl("https://api.github.com/user").queryParam("access_token", token).build().toUri(),HttpMethod.GET, getAuthorizationHeader(token), UserInfoRequest.class);
 	}
 	
+	/**
+	 * @return the request necessary to get any protected resource
+	 */
 	private HttpEntity<?> getAuthorizationHeader(final String token) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -61,6 +70,9 @@ public class AuthController {
 		return new HttpEntity<>(headers);
 	}
 	
+	/**
+	 * @return the request information necessary to initiate the authorization_code flow
+	 */
 	private HttpEntity<?> getInitialRequestHeaders(final BguClientRegistrationDetails details, final String code, final String state) {
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		body.add("client_id", details.getClientId());
