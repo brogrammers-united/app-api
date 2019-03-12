@@ -14,7 +14,7 @@ import org.bgu.model.UserAuthority;
 import org.bgu.model.dto.EmailVerificationDto;
 import org.bgu.model.interfaces.BguUserDetails;
 import org.bgu.model.interfaces.Verifiable;
-import org.bgu.model.oauth.ApplicationUser;
+import org.bgu.model.oauth.BguUser;
 import org.bgu.model.oauth.VerificationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -53,10 +53,10 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 		logger.log(LoggerLevel.SECURITY, "Incoming email verification coming from {}", dto.getEmail());
 		final VerificationToken token = template.findOne(Query.query(Criteria.where("email").is(dto.getEmail())), VerificationToken.class, "verification_token");
 		if (isEmailVerificationTokenValid(token) && dto.getVerification().equals(token.getVerification())) {
-			ApplicationUser user = template.findOne(Query.query(Criteria.where("email").is(dto.getEmail())), ApplicationUser.class, "bgu_user");
+			BguUser user = template.findOne(Query.query(Criteria.where("email").is(dto.getEmail())), BguUser.class, "bgu_user");
 			user.setAccountNonLocked(true);
 			user.setAuthorities(Arrays.asList(new UserAuthority("ROLE_USER")));
-			user = template.update(ApplicationUser.class).matching(Query.query(Criteria.where("email").is(dto.getEmail()))).replaceWith(user).findAndReplaceValue();
+			user = template.update(BguUser.class).matching(Query.query(Criteria.where("email").is(dto.getEmail()))).replaceWith(user).findAndReplaceValue();
 			if (template.remove(token, "verification_token").getDeletedCount() != 1) {
 				logger.log(LoggerLevel.SECURITY, "EMAIL VERIFICATION FAILED FOR {}", dto.getEmail());
 				return null;

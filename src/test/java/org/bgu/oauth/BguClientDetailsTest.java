@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.bgu.config.BaseMongoTest;
-import org.bgu.model.oauth.ApplicationClientDetails;
+import org.bgu.model.oauth.BguClientDetails;
 import org.bgu.service.oauth.BguClientDetailsService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class BguClientDetailsTest extends BaseMongoTest {
 	
 	@Test
 	public void BguClientDetailsService_ShouldGetClientBy_RegistrationId_Properly() {
-		final ApplicationClientDetails clientDetails = new ApplicationClientDetails(
+		final BguClientDetails clientDetails = new BguClientDetails(
 				"bgu-cli-client",
 				"cli",
 				"BGU CLI Application",
@@ -42,7 +42,7 @@ public class BguClientDetailsTest extends BaseMongoTest {
 		
 		assertNotNull(clientDetailsRepo.save(clientDetails));
 		
-		final ApplicationClientDetails details = clientDetailsService.loadClientByClientId("bgu-cli-client");
+		final BguClientDetails details = clientDetailsService.loadClientByClientId("bgu-cli-client");
 		assertNotNull(details);
 		assertTrue(encoder.matches("bgu-cli-secret", details.getClientSecret()));
 		assertEquals("BGU CLI Application", details.getClientName());

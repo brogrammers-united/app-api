@@ -2,9 +2,9 @@ package org.bgu.config.oauth;
 
 import java.util.Arrays;
 
-import org.bgu.service.oauth.ApplicationTokenEnhancer;
-import org.bgu.service.oauth.ApplicationTokenStore;
 import org.bgu.service.oauth.BguClientDetailsService;
+import org.bgu.service.oauth.BguTokenEnhancer;
+import org.bgu.service.oauth.BguTokenStore;
 import org.bgu.service.oauth.interfaces.BguUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -34,10 +35,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	private BguClientDetailsService clientDetailsService;
 	
 	@Autowired
-	private ApplicationTokenStore tokenStore;
+	private BguTokenStore tokenStore;
 	
 	@Autowired
-	private ApplicationTokenEnhancer tokenEnhancer;
+	private BguTokenEnhancer tokenEnhancer;
 	
 	@Autowired
 	private JwtAccessTokenConverter jwtAccessTokenConverter;
@@ -71,15 +72,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Bean
 	@Primary
-	public DefaultTokenServices tokenServices() {
+	public AuthorizationServerTokenServices tokenServices() {
 		TokenEnhancerChain chain = new TokenEnhancerChain();
 		chain.setTokenEnhancers(Arrays.asList(tokenEnhancer, jwtAccessTokenConverter));
 		DefaultTokenServices services = new DefaultTokenServices();
 		services.setAuthenticationManager(authManager);
 		services.setTokenStore(tokenStore);
 		services.setTokenEnhancer(chain);
-		services.setSupportRefreshToken(true);
 		services.setClientDetailsService(clientDetailsService);
 		return services;
 	}
+	
 }

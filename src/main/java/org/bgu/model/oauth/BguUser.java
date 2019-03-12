@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Document(collection = "bgu_user")
-public class ApplicationUser implements OAuth2User, Verifiable, BguUserDetails {
+public class BguUser implements OAuth2User, Verifiable, BguUserDetails {
 
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +63,7 @@ public class ApplicationUser implements OAuth2User, Verifiable, BguUserDetails {
 	private final BguRegistrationProvider registrationProvider;
 
 	@PersistenceConstructor
-	public ApplicationUser(String username, String password, String authorities, String name, String email,
+	public BguUser(String username, String password, String authorities, String name, String email,
 			boolean enabled, boolean accountNonLocked, boolean accountNonExpired, boolean credentialsNonExpired,
 			Map<String, Object> attributes, boolean mfaEnabled, BguRegistrationProvider registrationProvider) {
 		super();
@@ -208,7 +208,7 @@ public class ApplicationUser implements OAuth2User, Verifiable, BguUserDetails {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ApplicationUser other = (ApplicationUser) obj;
+		BguUser other = (BguUser) obj;
 		if (accountNonExpired != other.accountNonExpired)
 			return false;
 		if (accountNonLocked != other.accountNonLocked)

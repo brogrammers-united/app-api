@@ -2,10 +2,10 @@ package org.bgu.repository;
 
 import java.util.Optional;
 
-import org.bgu.model.oauth.ApplicationUser;
+import org.bgu.model.oauth.BguUser;
 
 public interface ApplicationUserRepository {
 
-	Optional<ApplicationUser> loadUserByUsername(String username);
-	Optional<ApplicationUser> loadUserByEmail(String email);
+	Optional<BguUser> loadUserByUsername(String username);
+	Optional<BguUser> loadUserByEmail(String email);
 }

@@ -1,5 +1,6 @@
 package org.bgu.config;
 
+import org.bgu.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.bgu.service.oauth.interfaces.BguUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private BguUserDetailsService userDetailsService;
+	
+	@Autowired
+	private HttpCookieOAuth2AuthorizationRequestRepository requestRepo;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -44,17 +48,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.csrf()
 				.ignoringRequestMatchers(new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.toString()),
 										 new AntPathRequestMatcher("/login", HttpMethod.POST.toString()),
-										 new AntPathRequestMatcher("/register", HttpMethod.POST.toString()))
+										 new AntPathRequestMatcher("/register", HttpMethod.POST.toString()),
+										 new AntPathRequestMatcher("/oauth2/*", HttpMethod.POST.toString()))
 				.and()
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.NEVER)
 				.and()
 			.httpBasic()
 				.disable()
+			.formLogin()
+				.disable()
 			.authorizeRequests()
 				.mvcMatchers(HttpMethod.POST, "/oauth/token").permitAll()
 				.mvcMatchers(HttpMethod.POST, "/login").permitAll()
 				.mvcMatchers(HttpMethod.POST, "/register").permitAll()
-				.and();
+				.mvcMatchers(HttpMethod.POST, "/oauth2/*").permitAll()
+				.and()
+			.oauth2Login()
+				.authorizationEndpoint()
+					.baseUri("/oauth2/authorize")
+					.authorizationRequestRepository(requestRepo)
+					.and()
+				.redirectionEndpoint()
+					.baseUri("/")
+					.and();
 	}
 }

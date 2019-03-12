@@ -4,19 +4,53 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.bgu.config.BaseMongoTest;
+import org.bgu.model.BguRegistrationProvider;
 import org.bgu.model.interfaces.BguUserDetails;
+import org.bgu.model.oauth.BguUser;
+import org.bgu.repository.impl.ApplicationUserRepositoryImpl;
+import org.bgu.service.oauth.BguUserDetailsServiceImpl;
 import org.bgu.service.oauth.interfaces.BguUserDetailsService;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class BguUserDetailsServiceTest extends BaseMongoTest {
 
-	@Autowired
 	private BguUserDetailsService userDetailsService;
+	
+	@Autowired
+	private PasswordEncoder encoder;
+	
+	private BguUser user;
+	
+	@Before
+	public void setUpUserDetailsService() {
+		this.userDetailsService = new BguUserDetailsServiceImpl(new ApplicationUserRepositoryImpl(template));
+	}
+	
+	@Before
+	public void setUpUser() {
+		user = 	new BguUser(
+				"test_user",
+				encoder.encode("password"),
+				"ROLE_TEST",
+				"Test User",
+				"test@test.com",
+				true,
+				true,
+				true,
+				true,
+				Collections.emptyMap(),
+				false,
+				BguRegistrationProvider.WEB_APP
+			);
+	}
 	
 	@Test
 	public void userDetailsService_ShouldLoadUser_ByEmail() {
@@ -34,12 +68,15 @@ public class BguUserDetailsServiceTest extends BaseMongoTest {
 		 * Then the user should be retrieved properly
 		 */
 		assertEquals("test_user", userDetails.getUsername());
-		assertEquals("password", userDetails.getPassword());
+		assertTrue(encoder.matches("password", userDetails.getPassword()));
 		assertEquals(Arrays.asList("ROLE_TEST"), userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 		assertTrue(userDetails.isEnabled());
 		assertTrue(userDetails.isAccountNonExpired());
 		assertTrue(userDetails.isAccountNonLocked());
 		assertTrue(userDetails.isCredentialsNonExpired());
+		
+		// Clean up
+		template.remove(user, "bgu_user");
 	}
 	
 	@Test
@@ -58,11 +95,14 @@ public class BguUserDetailsServiceTest extends BaseMongoTest {
 		 * Then the user should be retrieved properly
 		 */
 		assertEquals("test@test.com", userDetails.getEmail());
-		assertEquals("password", userDetails.getPassword());
+		assertTrue(encoder.matches("password", userDetails.getPassword()));
 		assertEquals(Arrays.asList("ROLE_TEST"), userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 		assertTrue(userDetails.isEnabled());
 		assertTrue(userDetails.isAccountNonExpired());
 		assertTrue(userDetails.isAccountNonLocked());
 		assertTrue(userDetails.isCredentialsNonExpired());
+		
+		// Clean up
+		template.remove(user, "bgu_user");
 	}
 }

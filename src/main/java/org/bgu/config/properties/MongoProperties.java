@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.util.StringUtils;
 
 @ConfigurationProperties(prefix="mongodb")
-@PropertySource(value = { "classpath:application.properties", "classpath:application.yml", "classpath:mongodb.properties","classpath:mongodb.yml" }, ignoreResourceNotFound = false)
+@PropertySource(value = { "classpath:mongodb.properties", "classpath:application.properties", "classpath:application.yml","classpath:mongodb.yml" }, ignoreResourceNotFound = false)
 public class MongoProperties {
 
 	private ApplicationContext context;

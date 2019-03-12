@@ -7,7 +7,7 @@ import java.util.Date;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bgu.config.LoggerLevel;
-import org.bgu.model.oauth.ApplicationUser;
+import org.bgu.model.oauth.BguUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class TokenServiceImpl implements TokenService {
 	
 	@Override
 	public String createToken(Authentication authentication) {
-		ApplicationUser user = (ApplicationUser) authentication;
+		BguUser user = (BguUser) authentication;
 		final Date now = new Date();
 		return Jwts.builder().signWith(keyService.getKeyPair().getPrivate())
 				   .setSubject(user.getUsername())

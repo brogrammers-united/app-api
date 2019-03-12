@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 @Document(collection="bgu_refresh_token")
-public class RefreshToken {
+public class BguRefreshToken {
 
 	@Id
 	private ObjectId id;
@@ -21,10 +21,10 @@ public class RefreshToken {
 
 	private String token;
 	
-	public RefreshToken() {}
+	public BguRefreshToken() {}
 	
 	@PersistenceConstructor
-	public RefreshToken(String tokenId, String authentication, String token) {
+	public BguRefreshToken(String tokenId, String authentication, String token) {
 		super();
 		this.tokenId = tokenId;
 		this.authentication = authentication;

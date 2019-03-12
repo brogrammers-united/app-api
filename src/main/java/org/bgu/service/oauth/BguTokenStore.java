@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.bgu.model.oauth.AccessToken;
-import org.bgu.model.oauth.RefreshToken;
+import org.bgu.model.oauth.BguAccessToken;
+import org.bgu.model.oauth.BguRefreshToken;
 import org.bgu.repository.AccessTokenRepository;
 import org.bgu.repository.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ApplicationTokenStore implements TokenStore {
+public class BguTokenStore implements TokenStore {
 
 	private final AccessTokenRepository accessTokenRepo;
 	private final RefreshTokenRepository refreshTokenRepo;
@@ -30,7 +30,7 @@ public class ApplicationTokenStore implements TokenStore {
 	private final AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
 	
 	@Autowired
-	public ApplicationTokenStore(AccessTokenRepository accessTokenRepo, RefreshTokenRepository refreshTokenRepo) {
+	public BguTokenStore(AccessTokenRepository accessTokenRepo, RefreshTokenRepository refreshTokenRepo) {
 		super();
 		this.accessTokenRepo = accessTokenRepo;
 		this.refreshTokenRepo = refreshTokenRepo;
@@ -43,7 +43,7 @@ public class ApplicationTokenStore implements TokenStore {
 
 	@Override
 	public OAuth2Authentication readAuthentication(String token) {
-		Optional<AccessToken> accessToken = accessTokenRepo.findByTokenId(extractTokenKey(token));
+		Optional<BguAccessToken> accessToken = accessTokenRepo.findByTokenId(extractTokenKey(token));
 		if (accessToken.isPresent())
 			return accessToken.get().getAuthentication();
 		return null;
@@ -58,7 +58,7 @@ public class ApplicationTokenStore implements TokenStore {
 		if (readAccessToken(token.getValue()) != null)
 			this.removeAccessToken(token);
 		
-		AccessToken accessToken = new AccessToken();
+		BguAccessToken accessToken = new BguAccessToken();
 		accessToken.setTokenId(extractTokenKey(token.getValue()));
 		accessToken.setToken(token);
 		accessToken.setAuthenticationId(authenticationKeyGenerator.extractKey(authentication));
@@ -72,7 +72,7 @@ public class ApplicationTokenStore implements TokenStore {
 
 	@Override
 	public OAuth2AccessToken readAccessToken(String tokenValue) {
-		Optional<AccessToken> accessToken = accessTokenRepo.findByTokenId(extractTokenKey(tokenValue));
+		Optional<BguAccessToken> accessToken = accessTokenRepo.findByTokenId(extractTokenKey(tokenValue));
 		if (accessToken.isPresent())
 			return accessToken.get().getToken();
 		return null;
@@ -80,14 +80,14 @@ public class ApplicationTokenStore implements TokenStore {
 
 	@Override
 	public void removeAccessToken(OAuth2AccessToken token) {
-		Optional<AccessToken> accessToken = accessTokenRepo.findByTokenId(extractTokenKey(token.getValue()));
+		Optional<BguAccessToken> accessToken = accessTokenRepo.findByTokenId(extractTokenKey(token.getValue()));
 		if (accessToken.isPresent())
 			accessTokenRepo.delete(accessToken.get());
 	}
 
 	@Override
 	public void storeRefreshToken(OAuth2RefreshToken refreshToken, OAuth2Authentication authentication) {
-		RefreshToken token = new RefreshToken();
+		BguRefreshToken token = new BguRefreshToken();
 		token.setTokenId(extractTokenKey(refreshToken.getValue()));
 		token.setToken(refreshToken);
 		token.setAuthentication(authentication);
@@ -96,26 +96,26 @@ public class ApplicationTokenStore implements TokenStore {
 
 	@Override
 	public OAuth2RefreshToken readRefreshToken(String tokenValue) {
-		Optional<RefreshToken> token = refreshTokenRepo.findOptionalByTokenId(extractTokenKey(tokenValue));
+		Optional<BguRefreshToken> token = refreshTokenRepo.findOptionalByTokenId(extractTokenKey(tokenValue));
 		return token.isPresent() ? token.get().getToken() : null;
 	}
 
 	@Override
 	public OAuth2Authentication readAuthenticationForRefreshToken(OAuth2RefreshToken token) {
-		Optional<RefreshToken> refreshToken = refreshTokenRepo.findOptionalByTokenId(extractTokenKey(token.getValue()));
+		Optional<BguRefreshToken> refreshToken = refreshTokenRepo.findOptionalByTokenId(extractTokenKey(token.getValue()));
 		return refreshToken.isPresent() ? refreshToken.get().getAuthentication() : null;
 	}
 
 	@Override
 	public void removeRefreshToken(OAuth2RefreshToken token) {
-		Optional<RefreshToken> refreshToken = refreshTokenRepo.findOptionalByTokenId(extractTokenKey(token.getValue()));
+		Optional<BguRefreshToken> refreshToken = refreshTokenRepo.findOptionalByTokenId(extractTokenKey(token.getValue()));
 		if (refreshToken.isPresent())
 			refreshTokenRepo.delete(refreshToken.get());
 	}
 
 	@Override
 	public void removeAccessTokenUsingRefreshToken(OAuth2RefreshToken refreshToken) {
-		Optional<AccessToken> accessToken = accessTokenRepo.findByRefreshToken(extractTokenKey(refreshToken.getValue()));
+		Optional<BguAccessToken> accessToken = accessTokenRepo.findByRefreshToken(extractTokenKey(refreshToken.getValue()));
 		if (accessToken.isPresent())
 			accessTokenRepo.delete(accessToken.get());
 	}
@@ -124,7 +124,7 @@ public class ApplicationTokenStore implements TokenStore {
 	public OAuth2AccessToken getAccessToken(OAuth2Authentication authentication) {
 		OAuth2AccessToken token = null;
 		String authenticationId = authenticationKeyGenerator.extractKey(authentication);
-		Optional<AccessToken> accessToken = accessTokenRepo.findByAuthenticationId(authenticationId);
+		Optional<BguAccessToken> accessToken = accessTokenRepo.findByAuthenticationId(authenticationId);
 		
 		if (accessToken.isPresent()) {
 			token = accessToken.get().getToken();

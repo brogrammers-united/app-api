@@ -2,12 +2,12 @@ package org.bgu.repository;
 
 import java.util.Optional;
 
-import org.bgu.model.oauth.RefreshToken;
+import org.bgu.model.oauth.BguRefreshToken;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface RefreshTokenRepository extends MongoRepository<RefreshToken, ObjectId>{
+public interface RefreshTokenRepository extends MongoRepository<BguRefreshToken, ObjectId>{
 
-	Optional<RefreshToken> findOptionalByTokenId(String tokenId);
+	Optional<BguRefreshToken> findOptionalByTokenId(String tokenId);
 	long deleteByTokenId(String tokenId);
 }
