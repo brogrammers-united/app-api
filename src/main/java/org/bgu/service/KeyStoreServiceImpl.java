@@ -12,8 +12,10 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
+import org.bgu.config.properties.KeyStoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,14 +24,15 @@ public class KeyStoreServiceImpl implements KeyStoreService {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final KeyPair keyPair;
 	
-	public KeyStoreServiceImpl() {
+	@Autowired
+	public KeyStoreServiceImpl(KeyStoreProperties keyStoreProps) {
 		try {
-			KeyStore keyStore = KeyStore.getInstance("pkcs12");
-			keyStore.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("authz_server.jks"), "Password123!".toCharArray());
-			Key key = keyStore.getKey("authz_server", "Password123!".toCharArray());
+			KeyStore keyStore = KeyStore.getInstance(keyStoreProps.getType());
+			keyStore.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(keyStoreProps.getFileName()), keyStoreProps.getPassword());
+			Key key = keyStore.getKey(keyStoreProps.getAlias(), keyStoreProps.getPassword());
 			if (key instanceof PrivateKey) {
 				// Get the certificate
-				Certificate cert = keyStore.getCertificate("authz_server");
+				Certificate cert = keyStore.getCertificate(keyStoreProps.getAlias());
 				
 				// Get Public Key
 				PublicKey pubKey = cert.getPublicKey();

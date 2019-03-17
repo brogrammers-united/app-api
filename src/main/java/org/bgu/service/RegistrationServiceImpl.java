@@ -12,7 +12,7 @@ import org.bgu.model.PersonalInformation;
 import org.bgu.model.Phone;
 import org.bgu.model.RegistrationForm;
 import org.bgu.model.dto.RegistrationResponseDto;
-import org.bgu.model.oauth.ApplicationUser;
+import org.bgu.model.oauth.BguUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 	
 	@Override
 	public RegistrationResponseDto attemptRegistration(@Valid RegistrationForm form) {
-		ApplicationUser user = new ApplicationUser(form.getUsername(), encoder.encode(form.getPassword()), "ROLE_PENDING_VERIFICATION", getNameFromRegistrationForm(form), form.getEmail(), true, false, true, true, Collections.emptyMap(), false, BguRegistrationProvider.WEB_APP);
+		BguUser user = new BguUser(form.getUsername(), encoder.encode(form.getPassword()), "ROLE_PENDING_VERIFICATION", getNameFromRegistrationForm(form), form.getEmail(), true, false, true, true, Collections.emptyMap(), false, BguRegistrationProvider.WEB_APP);
 		Phone phone = new Phone(user.getUsername(), form.getPhone().getNumber(), form.getPhone().getType());
 		PersonalInformation info = new PersonalInformation(user.getUsername(), form.getPersonalInformation().getFirstname(), form.getPersonalInformation().getLastname(), form.getPersonalInformation().getBirthday());
 		template.save(user, "bgu_user");

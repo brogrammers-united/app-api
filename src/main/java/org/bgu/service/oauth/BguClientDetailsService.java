@@ -1,6 +1,6 @@
 package org.bgu.service.oauth;
 
-import org.bgu.model.oauth.ApplicationClientDetails;
+import org.bgu.model.oauth.BguClientDetails;
 import org.bgu.repository.BguClientDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -18,7 +18,7 @@ public class BguClientDetailsService implements ClientDetailsService {
 	}
 	
 	@Override
-	public ApplicationClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
+	public BguClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
 		return repo.loadClientDetailsByClientId(clientId).orElseThrow(() -> new ClientRegistrationException("Failed to load client with id [" + clientId + "]"));
 	}
 

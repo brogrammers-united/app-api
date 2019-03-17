@@ -3,16 +3,16 @@ package org.bgu.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.bgu.model.oauth.AccessToken;
+import org.bgu.model.oauth.BguAccessToken;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface AccessTokenRepository extends MongoRepository<AccessToken, ObjectId>{
+public interface AccessTokenRepository extends MongoRepository<BguAccessToken, ObjectId>{
 
-	List<AccessToken> findByClientId(String clientId);
-	List<AccessToken> findByClientIdAndUsername(String clientId, String username);
-	Optional<AccessToken> findByTokenId(String tokenId);
-	Optional<AccessToken> findByRefreshToken(String refreshToken);
-	Optional<AccessToken> findByAuthenticationId(String authenticationId);
+	List<BguAccessToken> findByClientId(String clientId);
+	List<BguAccessToken> findByClientIdAndUsername(String clientId, String username);
+	Optional<BguAccessToken> findByTokenId(String tokenId);
+	Optional<BguAccessToken> findByRefreshToken(String refreshToken);
+	Optional<BguAccessToken> findByAuthenticationId(String authenticationId);
 	long deleteByTokenId(String tokenId);
 }

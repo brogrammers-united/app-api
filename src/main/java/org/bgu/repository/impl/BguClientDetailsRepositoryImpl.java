@@ -2,7 +2,7 @@ package org.bgu.repository.impl;
 
 import java.util.Optional;
 
-import org.bgu.model.oauth.ApplicationClientDetails;
+import org.bgu.model.oauth.BguClientDetails;
 import org.bgu.repository.BguClientDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -27,13 +27,13 @@ public class BguClientDetailsRepositoryImpl implements BguClientDetailsRepositor
 	}
 	
 	@Override
-	public Optional<ApplicationClientDetails> loadClientDetailsByClientId(String clientId) {
-		return Optional.of(template.findOne(Query.query(Criteria.where("clientId").is(clientId)), ApplicationClientDetails.class, "bgu_client_details"));
+	public Optional<BguClientDetails> loadClientDetailsByClientId(String clientId) {
+		return Optional.of(template.findOne(Query.query(Criteria.where("clientId").is(clientId)), BguClientDetails.class, "bgu_client_details"));
 	}
 
 	@Override
-	public Optional<ApplicationClientDetails> loadClientDetailsByRegistrationId(String registrationId) {
-		return Optional.of(template.findOne(Query.query(Criteria.where("registrationId").is(registrationId)), ApplicationClientDetails.class, "bgu_client_details"));
+	public Optional<BguClientDetails> loadClientDetailsByRegistrationId(String registrationId) {
+		return Optional.of(template.findOne(Query.query(Criteria.where("registrationId").is(registrationId)), BguClientDetails.class, "bgu_client_details"));
 	}
 	
 	

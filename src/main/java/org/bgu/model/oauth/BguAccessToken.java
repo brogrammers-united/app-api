@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 @Document(collection="bgu_access_token")
-public class AccessToken {
+public class BguAccessToken {
 
 	@Id
 	private ObjectId id;
@@ -29,10 +29,10 @@ public class AccessToken {
 
 	private String token;
 	
-	public AccessToken() {}
+	public BguAccessToken() {}
 
 	@PersistenceConstructor
-	public AccessToken(String tokenId, String authenticationId, String username, String clientId,
+	public BguAccessToken(String tokenId, String authenticationId, String username, String clientId,
 			String authentication, String refreshToken, String token) {
 		super();
 		this.tokenId = tokenId;

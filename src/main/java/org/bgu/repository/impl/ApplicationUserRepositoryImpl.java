@@ -2,7 +2,7 @@ package org.bgu.repository.impl;
 
 import java.util.Optional;
 
-import org.bgu.model.oauth.ApplicationUser;
+import org.bgu.model.oauth.BguUser;
 import org.bgu.repository.ApplicationUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -21,12 +21,12 @@ public class ApplicationUserRepositoryImpl implements ApplicationUserRepository 
 	}
 
 	@Override
-	public Optional<ApplicationUser> loadUserByUsername(String username) {
-		return Optional.of(template.findOne(Query.query(Criteria.where("username").is(username)), ApplicationUser.class, "bgu_user"));
+	public Optional<BguUser> loadUserByUsername(String username) {
+		return Optional.of(template.findOne(Query.query(Criteria.where("username").is(username)), BguUser.class, "bgu_user"));
 	}
 
 	@Override
-	public Optional<ApplicationUser> loadUserByEmail(String email) {
-		return Optional.of(template.findOne(Query.query(Criteria.where("email").is(email)), ApplicationUser.class, "bgu_user"));
+	public Optional<BguUser> loadUserByEmail(String email) {
+		return Optional.of(template.findOne(Query.query(Criteria.where("email").is(email)), BguUser.class, "bgu_user"));
 	}
 }

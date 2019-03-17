@@ -2,30 +2,39 @@ package org.bgu.user;
 
 import static org.junit.Assert.assertTrue;
 
+import org.bgu.config.BaseMongoTest;
 import org.bgu.model.PersonalInformation;
 import org.bgu.model.Phone;
 import org.bgu.model.PhoneType;
 import org.bgu.model.RegistrationForm;
 import org.bgu.model.dto.RegistrationResponseDto;
+import org.bgu.service.EmailVerificationService;
 import org.bgu.service.RegistrationService;
+import org.bgu.service.RegistrationServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class RegistrationTest {
+public class RegistrationTest extends BaseMongoTest {
 
-	@Autowired
 	private RegistrationService registrationService;
+	
+	@Autowired
+	private PasswordEncoder encoder;
+	
+	@Autowired
+	private EmailVerificationService emailVerificationService;
 	
 	private RegistrationForm form;
 	private Phone phone;
 	private PersonalInformation info;
+	
+	@Before
+	public void setUpRegistrationService() {
+		this.registrationService = new RegistrationServiceImpl(template, encoder, emailVerificationService);
+	}
 	
 	@Before
 	public void setUpRegistrationForm() {

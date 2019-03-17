@@ -16,7 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 
 @Document(collection = "bgu_client_details")
-public class ApplicationClientDetails implements ClientDetails {
+public class BguClientDetails implements ClientDetails {
 
 	private static final long serialVersionUID = 1L;
 
@@ -50,7 +50,7 @@ public class ApplicationClientDetails implements ClientDetails {
 	private final Map<String, Object> additionalInformation;
 
 	@PersistenceConstructor
-	public ApplicationClientDetails(String clientId, String registrationId, String clientName, String clientSecret,
+	public BguClientDetails(String clientId, String registrationId, String clientName, String clientSecret,
 			String resourceIds, String scope, String authorizedGrantTypes, String registeredRedirectUri,
 			String authorities, int accessTokenValidity, int refreshTokenValidity,
 			Map<String, Object> additionalInformation) {
@@ -165,7 +165,7 @@ public class ApplicationClientDetails implements ClientDetails {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ApplicationClientDetails other = (ApplicationClientDetails) obj;
+		BguClientDetails other = (BguClientDetails) obj;
 		if (accessTokenValidity != other.accessTokenValidity)
 			return false;
 		if (additionalInformation == null) {

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -25,6 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		builder.additionalMessageConverters(mappingJackson2HttpMessageConverter());
 		return builder.build();
 	}
 	
@@ -34,5 +36,12 @@ public class WebConfig implements WebMvcConfigurer {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		return mapper;
+	}
+	
+	@Bean
+	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setObjectMapper(objectMapper());
+		return converter;
 	}
 }
