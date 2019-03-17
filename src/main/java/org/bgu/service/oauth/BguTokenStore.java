@@ -13,6 +13,7 @@ import org.bgu.model.oauth.BguRefreshToken;
 import org.bgu.repository.AccessTokenRepository;
 import org.bgu.repository.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -21,6 +22,7 @@ import org.springframework.security.oauth2.provider.token.DefaultAuthenticationK
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 
+@Primary
 @Service
 public class BguTokenStore implements TokenStore {
 
