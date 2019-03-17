@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -50,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 										 new AntPathRequestMatcher("/login", HttpMethod.POST.toString()),
 										 new AntPathRequestMatcher("/register", HttpMethod.POST.toString()),
 										 new AntPathRequestMatcher("/oauth2/*", HttpMethod.POST.toString()))
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.and()
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.NEVER)
@@ -73,4 +75,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.baseUri("/")
 					.and();
 	}
+	
 }

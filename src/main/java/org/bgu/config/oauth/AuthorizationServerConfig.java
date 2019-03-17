@@ -79,8 +79,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		services.setAuthenticationManager(authManager);
 		services.setTokenStore(tokenStore);
 		services.setTokenEnhancer(chain);
+		services.setSupportRefreshToken(true);
+		services.setRefreshTokenValiditySeconds(60_000);
 		services.setClientDetailsService(clientDetailsService);
 		return services;
 	}
-	
 }

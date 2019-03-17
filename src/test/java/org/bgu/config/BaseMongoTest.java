@@ -3,9 +3,11 @@ package org.bgu.config;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.bgu.model.oauth.BguUser;
+import org.bgu.model.PersonalInformation;
+import org.bgu.model.Phone;
 import org.bgu.model.oauth.BguClientDetails;
 import org.bgu.model.oauth.BguClientRegistration;
+import org.bgu.model.oauth.BguUser;
 import org.bgu.repository.BguClientDetailsRepository;
 import org.bgu.repository.impl.BguClientDetailsRepositoryImpl;
 import org.junit.After;
@@ -56,6 +58,8 @@ public abstract class BaseMongoTest {
 		createCollectionIfNotExists(BguClientDetails.class);
 		createCollectionIfNotExists(BguUser.class);
 		createCollectionIfNotExists(BguClientRegistration.class);
+		createCollectionIfNotExists(PersonalInformation.class);
+		createCollectionIfNotExists(Phone.class);
 	}
 	
 	@After
@@ -63,6 +67,8 @@ public abstract class BaseMongoTest {
 		dropCollectionIfExists(BguClientDetails.class);
 		dropCollectionIfExists(BguUser.class);
 		dropCollectionIfExists(BguClientRegistration.class);
+		dropCollectionIfExists(Phone.class);
+		dropCollectionIfExists(PersonalInformation.class);
 	}
 	
 	protected final void createCollectionIfNotExists(Class<?> clazz) {
