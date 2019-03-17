@@ -1,9 +1,6 @@
 package org.bgu.config.oauth;
 
-import java.util.Arrays;
-
 import org.bgu.service.oauth.BguClientDetailsService;
-import org.bgu.service.oauth.BguTokenEnhancer;
 import org.bgu.service.oauth.BguTokenStore;
 import org.bgu.service.oauth.interfaces.BguUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
 @Configuration
 @EnableAuthorizationServer
@@ -38,10 +34,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	private BguTokenStore tokenStore;
 	
 	@Autowired
-	private BguTokenEnhancer tokenEnhancer;
-	
-	@Autowired
-	private JwtAccessTokenConverter jwtAccessTokenConverter;
+	private TokenEnhancer tokenEnhancerChain;
 	
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -51,14 +44,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		TokenEnhancerChain chain = new TokenEnhancerChain();
-		chain.setTokenEnhancers(Arrays.asList(tokenEnhancer, jwtAccessTokenConverter));
 		endpoints
 			.authenticationManager(authManager)
 			.userDetailsService(userDetailsService)
 			.tokenStore(tokenStore)
 			.tokenServices(tokenServices())
-			.tokenEnhancer(chain)
+			.tokenEnhancer(tokenEnhancerChain)
 			.setClientDetailsService(clientDetailsService);
 	}
 	
@@ -73,12 +64,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Bean
 	@Primary
 	public AuthorizationServerTokenServices tokenServices() {
-		TokenEnhancerChain chain = new TokenEnhancerChain();
-		chain.setTokenEnhancers(Arrays.asList(tokenEnhancer, jwtAccessTokenConverter));
 		DefaultTokenServices services = new DefaultTokenServices();
 		services.setAuthenticationManager(authManager);
 		services.setTokenStore(tokenStore);
-		services.setTokenEnhancer(chain);
+		services.setTokenEnhancer(tokenEnhancerChain);
 		services.setSupportRefreshToken(true);
 		services.setRefreshTokenValiditySeconds(60_000);
 		services.setClientDetailsService(clientDetailsService);
