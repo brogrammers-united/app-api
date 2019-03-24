@@ -1,7 +1,10 @@
 package org.bgu.config.oauth;
 
+import java.util.Arrays;
+
 import org.bgu.service.KeyStoreService;
 import org.bgu.service.oauth.BguClientDetailsService;
+import org.bgu.service.oauth.BguTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +13,8 @@ import org.springframework.security.oauth2.client.token.grant.code.Authorization
 import org.springframework.security.oauth2.common.AuthenticationScheme;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
@@ -25,6 +30,12 @@ public class OAuth2Beans {
 	}
 	
 	@Bean
+	public TokenEnhancer tokenEnhancer(final KeyStoreService keyStoreService) {
+		TokenEnhancerChain chain = new TokenEnhancerChain();
+		chain.setTokenEnhancers(Arrays.asList(jwtAccessTokenConverter(keyStoreService), new BguTokenEnhancer()));
+		return chain;
+	}
+	
 	public JwtAccessTokenConverter jwtAccessTokenConverter(final KeyStoreService keyStoreService) {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		converter.setKeyPair(keyStoreService.getKeyPair());
