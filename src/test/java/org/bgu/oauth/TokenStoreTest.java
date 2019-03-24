@@ -1,0 +1,24 @@
+package org.bgu.oauth;
+
+import org.bgu.model.oauth.BguUser;
+import org.bgu.oauth.service.BguTokenStore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class TokenStoreTest {
+
+	@Autowired
+	private BguTokenStore tokenStore;
+	
+	@Test
+	public void tokenStore_ShouldReadTokenValueProperly() {
+		OAuth2Authentication auth = tokenStore.readAuthentication("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsicmVzb3VyY2VfYSJdLCJ1c2VyX25hbWUiOiJ3Z2VudHJ5MjIiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiYzA3NTE1MjhhY2YxMjVhZDc3MTdkNDBhM2ZjNjFlMGNlNzA2YzNmOSIsImNsaWVudF9pZCI6IjdhZTcwOWVkM2Y5OGJkYzg2OGU3Iiwic2NvcGUiOlsicmVwbyx1c2VyIl19.iLuxEkC9VvMqC6cKfW0Iym2aEj4b4b-rW_iIKgREaIe4eMjvql9XqEYB8zOuV8ROeQPj_eKct4cfd24NxOXqOXOpVYZOpp6Yra8EIJffSaMv94QSlPLmKZu8bqaa85vXInK96cVP6NeN6U5Zkk5Ecoysb9Hf_lJv6bDD3nffwlJcolGc2tSB6Y1fNuLJ9C74mMgPxt0_6PxKt2YevsLDrFGGXBt33T1jWy0Sa4rj7uBrwpARsOcHix9mgwvR7RgDRZG3_8BPgaNNHqJRsy_hLYuKrmOFUff9a9MRyFZMoqa0AKesmQyTnO28zst4sNe2p-A1LZPgv5BOeD-S5fM0PxQQoVOnugwZXiAKBDaZ9WMtDHDA1bYXAZlvwWCfykU11FXPuW5OheTLdHX_qSoXwjpUhx2IHmIBrtc0GK8vugfOEYztCti9yiwPX5eUw22ewAx5e-fDk2tu9psyxFgP1CTfaA4MfIJW4oRz5xAbw_b8fqJ7j8yQ1bGAukD2xW14ezNhfvPmw46zqy-pHk0fg4Bfvibu1W35OQ-6cEjVtNAEvC3FL9hPQyOMzX-0VIlKE6cuuiLMAzzkjJJ5ABTq7D3Rg31P-1JhchoV0sQh8HYfKEK_P3zMligAn0_0mzDQTxACsQ6KvojytNWh8GIYePMONDPMaYlGW9Nh-1gsOWY");
+		System.err.println(((BguUser) auth.getPrincipal()).getGithubOAuthToken());
+	}
+}

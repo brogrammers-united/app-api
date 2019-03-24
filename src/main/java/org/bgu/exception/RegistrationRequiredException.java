@@ -4,6 +4,10 @@ public class RegistrationRequiredException extends BguAuthenticationException {
 
 	private static final long serialVersionUID = 1L;
 	
+	public RegistrationRequiredException() {
+		this("Registration is required before continuing");
+	}
+	
 	public RegistrationRequiredException(String msg, Throwable t) {
 		super(msg, t);
 	}

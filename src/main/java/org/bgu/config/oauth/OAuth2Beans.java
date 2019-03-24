@@ -2,13 +2,12 @@ package org.bgu.config.oauth;
 
 import java.util.Arrays;
 
-import org.bgu.service.KeyStoreService;
-import org.bgu.service.oauth.BguClientDetailsService;
-import org.bgu.service.oauth.BguTokenEnhancer;
+import org.bgu.oauth.service.BguClientDetailsService;
+import org.bgu.oauth.service.BguTokenEnhancer;
+import org.bgu.security.service.KeyStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.common.AuthenticationScheme;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
@@ -48,7 +47,7 @@ public class OAuth2Beans {
 	}
 	
 	@Bean
-	public OAuth2ProtectedResourceDetails github() {
+	public AuthorizationCodeResourceDetails github() {
 		AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
 		details.setId("github");
 		details.setAccessTokenUri("https://github.com/login/oauth/access_token");

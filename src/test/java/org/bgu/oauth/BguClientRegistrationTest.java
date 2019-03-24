@@ -9,7 +9,7 @@ import java.util.Collections;
 import org.bgu.config.BaseMongoTest;
 import org.bgu.model.oauth.BguClientDetails;
 import org.bgu.model.oauth.BguClientRegistration;
-import org.bgu.service.oauth.BguClientRegistrationRepository;
+import org.bgu.oauth.service.BguClientRegistrationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -35,7 +35,7 @@ public class BguClientRegistrationTest extends BaseMongoTest {
 					System.getenv("GH_API_CLIENT_SECRET"),
 					"https://github.com/login/oauth/authorize",
 					AuthorizationGrantType.AUTHORIZATION_CODE,
-					"openid,profile,email,read:user",
+					"openid,profile,email,user,repo",
 					AuthenticationMethod.FORM,
 					ClientAuthenticationMethod.POST,
 					"{baseUrl}/login/oauth2/code/{registrationId}",
@@ -55,7 +55,7 @@ public class BguClientRegistrationTest extends BaseMongoTest {
 				"Github",
 				System.getenv("GH_API_CLIENT_SECRET"),
 				"resource_a",
-				"openid,profile,email,read:user",
+				"openid,profile,email,user,repo",
 				"client_credentials,password,authorization_code",
 				"http://localhost:8080",
 				"ROLE_CLIENT_API",
@@ -83,7 +83,8 @@ public class BguClientRegistrationTest extends BaseMongoTest {
 		assertTrue(registration.getScopes().contains("openid"));
 		assertTrue(registration.getScopes().contains("profile"));
 		assertTrue(registration.getScopes().contains("email"));
-		assertTrue(registration.getScopes().contains("read:user"));
+		assertTrue(registration.getScopes().contains("user"));
+		assertTrue(registration.getScopes().contains("repo"));
 		assertEquals(ClientAuthenticationMethod.POST, registration.getClientAuthenticationMethod());
 		
 	}
