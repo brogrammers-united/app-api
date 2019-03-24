@@ -8,12 +8,11 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.bgu.config.BaseMongoTest;
-import org.bgu.model.BguRegistrationProvider;
 import org.bgu.model.interfaces.BguUserDetails;
 import org.bgu.model.oauth.BguUser;
+import org.bgu.oauth.service.BguUserDetailsServiceImpl;
+import org.bgu.oauth.service.interfaces.BguUserDetailsService;
 import org.bgu.repository.impl.ApplicationUserRepositoryImpl;
-import org.bgu.service.oauth.BguUserDetailsServiceImpl;
-import org.bgu.service.oauth.interfaces.BguUserDetailsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,17 +37,14 @@ public class BguUserDetailsServiceTest extends BaseMongoTest {
 	public void setUpUser() {
 		user = 	new BguUser(
 				"test_user",
-				encoder.encode("password"),
 				"ROLE_TEST",
-				"Test User",
 				"test@test.com",
 				true,
 				true,
 				true,
 				true,
 				Collections.emptyMap(),
-				false,
-				BguRegistrationProvider.WEB_APP
+				"some_access_token"
 			);
 	}
 	

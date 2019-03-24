@@ -1,7 +1,8 @@
 package org.bgu.config;
 
+import org.bgu.oauth.service.interfaces.BguUserDetailsService;
 import org.bgu.security.HttpCookieOAuth2AuthorizationRequestRepository;
-import org.bgu.service.oauth.interfaces.BguUserDetailsService;
+import org.bgu.security.OAuth2AuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -26,6 +29,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private HttpCookieOAuth2AuthorizationRequestRepository requestRepo;
+	
+	@Autowired
+	private ClientRegistrationRepository clientRegistrationRepository;
+	
+	@Autowired
+	private OAuth2AuthenticationSuccessHandler successHandler;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -40,7 +49,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService);
+		auth
+			.userDetailsService(userDetailsService);
+	}
+	
+	@Override
+	public BguUserDetailsService userDetailsServiceBean() throws Exception {
+		return userDetailsService;
 	}
 	
 	@Override
@@ -48,9 +63,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.csrf()
 				.ignoringRequestMatchers(new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.toString()),
-										 new AntPathRequestMatcher("/login", HttpMethod.POST.toString()),
-										 new AntPathRequestMatcher("/register", HttpMethod.POST.toString()),
-										 new AntPathRequestMatcher("/oauth2/*", HttpMethod.POST.toString()))
+										 new AntPathRequestMatcher("/register", HttpMethod.GET.toString()),
+										 new AntPathRequestMatcher("/oauth2/*", HttpMethod.POST.toString()),
+										 new AntPathRequestMatcher("/login/**", HttpMethod.GET.toString()))
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.and()
 			.sessionManagement()
@@ -62,18 +77,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.disable()
 			.authorizeRequests()
 				.mvcMatchers(HttpMethod.POST, "/oauth/token").permitAll()
-				.mvcMatchers(HttpMethod.POST, "/login").permitAll()
-				.mvcMatchers(HttpMethod.POST, "/register").permitAll()
+				.mvcMatchers(HttpMethod.GET, "/user").permitAll()
 				.mvcMatchers(HttpMethod.POST, "/oauth2/*").permitAll()
+				.mvcMatchers(HttpMethod.GET, "/login/**").permitAll()
+				.mvcMatchers("/webjars/**").permitAll()
+				.mvcMatchers("/img/**").permitAll()
+				.anyRequest().authenticated()
 				.and()
 			.oauth2Login()
+				.loginPage("/login")
+				.successHandler(successHandler)
+				.clientRegistrationRepository(clientRegistrationRepository)
 				.authorizationEndpoint()
 					.baseUri("/oauth2/authorize")
 					.authorizationRequestRepository(requestRepo)
 					.and()
 				.redirectionEndpoint()
 					.baseUri("/")
-					.and();
+					.and()
+				.and()
+			.oauth2Client()
+				.authorizationCodeGrant()
+					.accessTokenResponseClient(new DefaultAuthorizationCodeTokenResponseClient());
+			
 	}
 	
 }

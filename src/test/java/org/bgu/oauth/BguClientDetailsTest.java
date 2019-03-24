@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import org.bgu.config.BaseMongoTest;
 import org.bgu.model.oauth.BguClientDetails;
-import org.bgu.service.oauth.BguClientDetailsService;
+import org.bgu.oauth.service.BguClientDetailsService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

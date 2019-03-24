@@ -1,5 +1,6 @@
 package org.bgu.config;
 
+import org.bgu.model.GithubBguOAuth2UserInfo;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -8,14 +9,22 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry
+			.addResourceHandler("/webjars/**", "/img/**").addResourceLocations("/webjars/", "classpath:/static/img/");
+	}
+	
 	@Bean
 	public MessageSource messageSource() {
 		ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
@@ -35,6 +44,7 @@ public class WebConfig implements WebMvcConfigurer {
 	public ObjectMapper objectMapper() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		mapper.registerSubtypes(new NamedType(GithubBguOAuth2UserInfo.class, "github"));
 		return mapper;
 	}
 	
