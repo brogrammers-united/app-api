@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.bgu.config.LoggerLevel;
 import org.bgu.oauth.service.BguTokenStore;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		logger.log(LoggerLevel.AUTHENTICATION, "{}", auth);
 		clearAuthenticationAttributes(request, response);
 		final String token = tokenStore.getAccessToken(auth).getValue();
+		SecurityContextHolder.getContext().setAuthentication(auth);
+		logger.log(LoggerLevel.SECURITY, "Security context set!");
 		getRedirectStrategy().sendRedirect(request, response, UriComponentsBuilder.fromHttpUrl("http://localhost:8080/user").queryParam("token", token).toUriString());
 	}
 	

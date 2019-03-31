@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.mvcMatchers(HttpMethod.GET, "/user").permitAll()
 				.mvcMatchers(HttpMethod.POST, "/oauth2/*").permitAll()
 				.mvcMatchers(HttpMethod.GET, "/login/**").permitAll()
+				.antMatchers("/starter/**").permitAll()
 				.mvcMatchers("/webjars/**").permitAll()
 				.mvcMatchers("/img/**").permitAll()
 				.anyRequest().authenticated()
