@@ -65,7 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.ignoringRequestMatchers(new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.toString()),
 										 new AntPathRequestMatcher("/register", HttpMethod.GET.toString()),
 										 new AntPathRequestMatcher("/oauth2/*", HttpMethod.POST.toString()),
-										 new AntPathRequestMatcher("/login/**", HttpMethod.GET.toString()))
+										 new AntPathRequestMatcher("/login/**", HttpMethod.GET.toString()),
+										 new AntPathRequestMatcher("/github/**", HttpMethod.POST.toString()))
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.and()
 			.sessionManagement()
@@ -80,6 +81,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.mvcMatchers(HttpMethod.GET, "/user").permitAll()
 				.mvcMatchers(HttpMethod.POST, "/oauth2/*").permitAll()
 				.mvcMatchers(HttpMethod.GET, "/login/**").permitAll()
+				.antMatchers("/github/**").permitAll()
+				.antMatchers("/starter/**").permitAll()
 				.mvcMatchers("/webjars/**").permitAll()
 				.mvcMatchers("/img/**").permitAll()
 				.anyRequest().authenticated()
