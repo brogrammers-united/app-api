@@ -25,22 +25,19 @@ public class BguAccessToken {
 
 	private String authentication;
 
-	private String refreshToken;
-
 	private String token;
 	
 	public BguAccessToken() {}
 
 	@PersistenceConstructor
 	public BguAccessToken(String tokenId, String authenticationId, String username, String clientId,
-			String authentication, String refreshToken, String token) {
+			String authentication, String token) {
 		super();
 		this.tokenId = tokenId;
 		this.authenticationId = authenticationId;
 		this.username = username;
 		this.clientId = clientId;
 		this.authentication = authentication;
-		this.refreshToken = refreshToken;
 		this.token = token;
 	}
 
@@ -84,14 +81,6 @@ public class BguAccessToken {
 		this.clientId = clientId;
 	}
 
-	public String getRefreshToken() {
-		return refreshToken;
-	}
-
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
-
 	public OAuth2AccessToken getToken() {
 		return new DefaultOAuth2AccessToken(token);
 	}
@@ -129,8 +118,6 @@ public class BguAccessToken {
 		builder.append(clientId);
 		builder.append(", authentication=");
 		builder.append(authentication);
-		builder.append(", refreshToken=");
-		builder.append(refreshToken);
 		builder.append(", token=");
 		builder.append(token);
 		builder.append("]");

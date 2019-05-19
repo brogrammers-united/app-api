@@ -41,7 +41,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		final String token = tokenStore.getAccessToken(auth).getValue();
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		logger.log(LoggerLevel.SECURITY, "Security context set!");
-		getRedirectStrategy().sendRedirect(request, response, UriComponentsBuilder.fromHttpUrl("http://localhost:8080/user").queryParam("token", token).toUriString());
+		CookieUtils.addCookie(response, "api_token", token, (60 * 15)); // Cookie valid for 15 minutes
+		logger.log(LoggerLevel.SECURITY, "Cookie set!");
+		getRedirectStrategy().sendRedirect(request, response, UriComponentsBuilder.fromHttpUrl("http://localhost:8080/user").toUriString());
 	}
 	
 	

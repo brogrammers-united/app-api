@@ -20,20 +20,20 @@ import com.mongodb.ServerAddress;
 public class MongoConfig extends AbstractMongoConfiguration {
 	
 	@Autowired
-	private MongoProperties mongoProps;
+	private MongoProperties mongoProperties;
 	
 	@Bean
 	@Override
 	public MongoClient mongoClient() {
 		MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
-		builder.alwaysUseMBeans(mongoProps.isRegisterMbeans());
+		builder.alwaysUseMBeans(mongoProperties.isRegisterMbeans());
 		builder.sslEnabled(false);
-		builder.connectionsPerHost(mongoProps.getConnectionsPerHost());
-		builder.connectTimeout(mongoProps.getConnectionTimeout());
-		builder.minConnectionsPerHost(mongoProps.getMinConnectionsPerHost());
-		builder.maxConnectionLifeTime(mongoProps.getConnectionLifeTime());
-		builder.maxConnectionIdleTime(mongoProps.getConnectionIdleTime());
-		return new MongoClient(new ServerAddress(mongoProps.getUrl(), mongoProps.getPort()), MongoCredential.createCredential(mongoProps.getUsername(), mongoProps.getDatabase(), mongoProps.getPassword()), builder.build());
+		builder.connectionsPerHost(mongoProperties.getConnectionsPerHost());
+		builder.connectTimeout(mongoProperties.getConnectionTimeout());
+		builder.minConnectionsPerHost(mongoProperties.getMinConnectionsPerHost());
+		builder.maxConnectionLifeTime(mongoProperties.getConnectionLifeTime());
+		builder.maxConnectionIdleTime(mongoProperties.getConnectionIdleTime());
+		return new MongoClient(new ServerAddress(mongoProperties.getUrl(), mongoProperties.getPort()), MongoCredential.createCredential(mongoProperties.getUsername(), mongoProperties.getDatabase(), mongoProperties.getPassword()), builder.build());
 	}
 	
 	@Bean
@@ -50,11 +50,11 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
 	@Override
 	protected String getDatabaseName() {
-		return mongoProps.getDatabase();
+		return mongoProperties.getDatabase();
 	}
 
 	@Override
 	public Collection<String> getMappingBasePackages() {
-		return mongoProps.getMappingBasePackages();
+		return mongoProperties.getMappingBasePackages();
 	}
 }
