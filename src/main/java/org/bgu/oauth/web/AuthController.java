@@ -43,11 +43,16 @@ public class AuthController {
 	
 	@GetMapping(value = "/login/oauth2/code/{registrationId}")
 	public void attemptAuthorizationCodeFlow(HttpServletRequest request, HttpServletResponse response, @PathVariable("registrationId") String registrationId, @RequestParam("code") final String code, @RequestParam("state") final String state) {
+		// Locate the ClientRegistration object from Mongo
 		final ClientRegistration registration = clientRegistrationRepo.findByRegistrationId(registrationId);
 		if (registration == null)
 			throw new InvalidClientRegistrationException();
 		logger.log(LoggerLevel.OAUTH, "Client registration found!");
+
+		// Given a valid ClientRegistration, contact Github servers for OAuth token
 		OAuth2AccessToken accessToken = loginUtil.retrieveOAuth2AccessToken(registration, code, state);
+
+
 		OAuth2Authentication authentication = loginUtil.attemptAuthentication(registration, accessToken);
 		accessToken = tokenEnhancer.enhance(accessToken, authentication);
 		tokenStore.storeAccessToken(accessToken, authentication);

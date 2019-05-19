@@ -12,7 +12,5 @@ public interface AccessTokenRepository extends MongoRepository<BguAccessToken, O
 	List<BguAccessToken> findByClientId(String clientId);
 	List<BguAccessToken> findByClientIdAndUsername(String clientId, String username);
 	Optional<BguAccessToken> findByTokenId(String tokenId);
-	Optional<BguAccessToken> findByRefreshToken(String refreshToken);
 	Optional<BguAccessToken> findByAuthenticationId(String authenticationId);
-	long deleteByTokenId(String tokenId);
 }
