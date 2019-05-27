@@ -13,12 +13,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -35,11 +31,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private OAuth2AuthenticationSuccessHandler successHandler;
-	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 
 	@Bean
 	@Override
@@ -62,13 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.csrf()
-				.ignoringRequestMatchers(new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.toString()),
-										 new AntPathRequestMatcher("/register", HttpMethod.GET.toString()),
-										 new AntPathRequestMatcher("/oauth2/*", HttpMethod.POST.toString()),
-										 new AntPathRequestMatcher("/login/**", HttpMethod.GET.toString()),
-										 new AntPathRequestMatcher("/github/**", HttpMethod.POST.toString()))
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-				.and()
+				.disable()
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.NEVER)
 				.and()
@@ -77,12 +62,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.formLogin()
 				.disable()
 			.authorizeRequests()
-				.mvcMatchers(HttpMethod.POST, "/oauth/token").permitAll()
-				.mvcMatchers(HttpMethod.GET, "/user").permitAll()
-				.mvcMatchers(HttpMethod.POST, "/oauth2/*").permitAll()
+
 				.mvcMatchers(HttpMethod.GET, "/login/**").permitAll()
-				.antMatchers("/github/**").permitAll()
-				.antMatchers("/starter/**").permitAll()
 				.mvcMatchers("/webjars/**").permitAll()
 				.mvcMatchers("/img/**").permitAll()
 				.anyRequest().authenticated()

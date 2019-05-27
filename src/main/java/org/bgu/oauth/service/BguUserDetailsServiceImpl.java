@@ -2,10 +2,10 @@ package org.bgu.oauth.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bgu.config.LoggerLevel;
 import org.bgu.exception.EmailNotFoundException;
 import org.bgu.model.BguOAuth2UserInfo;
 import org.bgu.model.interfaces.BguUserDetails;
+import org.bgu.model.BguUser;
 import org.bgu.oauth.service.interfaces.BguUserDetailsService;
 import org.bgu.repository.ApplicationUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,31 +28,23 @@ public class BguUserDetailsServiceImpl implements BguUserDetailsService {
 	public BguUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		if (!StringUtils.hasText(username))
 			throw new UsernameNotFoundException("Must provide valid username");
-		logger.log(LoggerLevel.AUTHENTICATION, "Attempting to authenticate user by username: {}", username);
-		try {
-			return repo.loadUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-		} catch (NullPointerException e) {
-			// If NPE is thrown, the user needs to be registered
-			return null;
-		}
+		logger.debug("Attempting to authenticate user by username: {}", username);
+		return repo.loadUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
 	}
 
 	@Override
 	public BguUserDetails loadUserByEmail(String email) throws EmailNotFoundException {
 		if (!StringUtils.hasText(email))
 			throw new EmailNotFoundException("Must provide valid email");
-		logger.log(LoggerLevel.AUTHENTICATION, "Attempting to authenticate user by email: {}", email);
-		try {
-			return repo.loadUserByEmail(email).orElseThrow(() -> new EmailNotFoundException("Invalid Credentials"));
-		} catch (NullPointerException e) {
-			// If NPE is thrown, the user needs to be registered
-			return null;
-		}
+		logger.debug("Attempting to authenticate user by email: {}", email);
+		return repo.loadUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
 	}
 
 	@Override
 	public BguUserDetails updateUserWithOAuth2Info(String accessToken, BguOAuth2UserInfo userInfo) {
-		return repo.updateUser(accessToken, userInfo).orElseThrow(RuntimeException::new);
+		logger.debug("Attempting to update: {}", userInfo.getUsername());
+		BguUser user =  repo.updateUser(accessToken, userInfo).orElseThrow(RuntimeException::new);
+		return user;
 	}
 
 }

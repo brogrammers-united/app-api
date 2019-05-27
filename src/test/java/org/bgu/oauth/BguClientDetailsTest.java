@@ -1,13 +1,5 @@
 package org.bgu.oauth;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.Collectors;
-
 import org.bgu.config.BaseMongoTest;
 import org.bgu.model.oauth.BguClientDetails;
 import org.bgu.oauth.service.BguClientDetailsService;
@@ -15,6 +7,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 public class BguClientDetailsTest extends BaseMongoTest {
 	

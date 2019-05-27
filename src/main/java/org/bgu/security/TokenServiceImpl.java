@@ -1,18 +1,16 @@
-package org.bgu.security.service;
+package org.bgu.security;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
+import io.jsonwebtoken.Jwts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bgu.config.LoggerLevel;
-import org.bgu.model.oauth.BguUser;
+import org.bgu.model.BguUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import io.jsonwebtoken.Jwts;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Service
 public class TokenServiceImpl implements TokenService {
@@ -29,11 +27,11 @@ public class TokenServiceImpl implements TokenService {
 	@Override
 	public String createToken(Authentication authentication) {
 		BguUser user = (BguUser) authentication;
-		final Date now = new Date();
+		final long current = System.currentTimeMillis();
 		return Jwts.builder().signWith(keyService.getKeyPair().getPrivate())
 				   .setSubject(user.getUsername())
-				   .setIssuedAt(now)
-				   .setExpiration(new Date(now.getTime() + TOKEN_EXPIRY))
+				   .setIssuedAt(new Date(current))
+				   .setExpiration(new Date(current + TOKEN_EXPIRY))
 				   .compact();
 	}
 
@@ -43,8 +41,8 @@ public class TokenServiceImpl implements TokenService {
 			Jwts.parser().setSigningKey(keyService.getKeyPair().getPublic()).parseClaimsJws(token);
 			return true;
 		} catch (Exception e) {
-			logger.log(LoggerLevel.SECURITY, "JWT validation failed at {}. Exception was {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy")), e.getClass().getName());
-			logger.log(LoggerLevel.SECURITY, "Cause was {}. {}", e.getCause(), e.getMessage());
+			logger.error("JWT validation failed at {}. Exception was {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy")), e.getClass().getName());
+			logger.error("Cause was {}. {}", e.getCause(), e.getMessage());
 			return false;
 		}
 	}

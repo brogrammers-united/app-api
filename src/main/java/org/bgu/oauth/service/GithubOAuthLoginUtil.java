@@ -1,13 +1,7 @@
 package org.bgu.oauth.service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bgu.config.LoggerLevel;
 import org.bgu.model.BguOAuth2UserInfo;
 import org.bgu.model.GithubBguOAuth2UserInfo;
 import org.bgu.model.interfaces.BguUserDetails;
@@ -32,6 +26,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class GithubOAuthLoginUtil implements OAuth2LoginUtil {
@@ -59,7 +58,7 @@ public class GithubOAuthLoginUtil implements OAuth2LoginUtil {
 		BguClientDetails details = service.loadClientByClientId(registration.getClientId());
 		TokenRequest tokenRequest = requestFactory.createTokenRequest(generateAuthorizationParameters(registration), details);
 		OAuth2Request request = tokenRequest.createOAuth2Request(details);
-		logger.log(LoggerLevel.OAUTH, "Incoming requested scopes: {}", request.getScope());
+		logger.trace("Incoming requested scopes: {}", request.getScope());
 		BguOAuth2UserInfo info = makeUserInfoRequest(token);
 		BguUserDetails userDetails = userDetailsService.loadUserByEmail(info.getEmail());
 		return userDetails == null ? new OAuth2Authentication(request, new BguOAuth2AuthenticationToken(registrationService.attemptRegistration(token.getValue(), info))) : new OAuth2Authentication(request, new BguOAuth2AuthenticationToken(userDetailsService.updateUserWithOAuth2Info(token.getValue(), info)));
