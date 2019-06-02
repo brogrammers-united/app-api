@@ -1,8 +1,5 @@
 package org.bgu.config.oauth;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bgu.oauth.service.BguClientDetailsService;
 import org.bgu.oauth.service.BguClientRegistrationRepository;
 import org.bgu.oauth.service.BguTokenStore;
@@ -31,6 +28,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableAuthorizationServer
@@ -113,8 +113,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Bean
 	public OAuth2RestTemplate oauth2RestTemplate(OAuth2ProtectedResourceDetails details) {
-		OAuth2RestTemplate template = new OAuth2RestTemplate(details, new DefaultOAuth2ClientContext());
-		return template;
+		return new OAuth2RestTemplate(details, new DefaultOAuth2ClientContext());
 	}
 	
 }

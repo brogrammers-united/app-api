@@ -1,11 +1,12 @@
 package org.bgu.config;
 
-import java.io.IOException;
-import java.util.Properties;
-
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import org.bgu.model.oauth.BguClientDetails;
 import org.bgu.model.oauth.BguClientRegistration;
-import org.bgu.model.oauth.BguUser;
+import org.bgu.model.BguUser;
 import org.bgu.repository.BguClientDetailsRepository;
 import org.bgu.repository.impl.BguClientDetailsRepositoryImpl;
 import org.junit.After;
@@ -15,10 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import java.io.IOException;
+import java.util.Properties;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

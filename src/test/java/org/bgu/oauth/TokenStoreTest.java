@@ -1,6 +1,6 @@
 package org.bgu.oauth;
 
-import org.bgu.model.oauth.BguUser;
+import org.bgu.model.BguUser;
 import org.bgu.oauth.service.BguTokenStore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,11 +1,5 @@
 package org.bgu.oauth;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collections;
-
 import org.bgu.config.BaseMongoTest;
 import org.bgu.model.oauth.BguClientDetails;
 import org.bgu.model.oauth.BguClientRegistration;
@@ -18,6 +12,10 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.util.StringUtils;
+
+import java.util.Collections;
+
+import static org.junit.Assert.*;
 
 public class BguClientRegistrationTest extends BaseMongoTest {
 

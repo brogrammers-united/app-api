@@ -1,16 +1,15 @@
 package org.bgu.oauth.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bgu.config.LoggerLevel;
 import org.bgu.model.interfaces.BguUserDetails;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BguTokenEnhancer implements TokenEnhancer {
 	
@@ -18,7 +17,7 @@ public class BguTokenEnhancer implements TokenEnhancer {
 
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-		logger.log(LoggerLevel.OAUTH, "Enhancing token for {}", ((BguUserDetails) authentication.getPrincipal()).getUsername());
+		logger.info("Enhancing token for {}", ((BguUserDetails) authentication.getPrincipal()).getUsername());
 		if (authentication.getOAuth2Request().getGrantType().equals("client_credentials"))
 			return accessToken;
 		BguUserDetails user = (BguUserDetails) authentication.getPrincipal();

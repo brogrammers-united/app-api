@@ -1,14 +1,5 @@
 package org.bgu.oauth.web;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bgu.config.LoggerLevel;
 import org.bgu.exception.InvalidClientRegistrationException;
 import org.bgu.oauth.service.BguClientRegistrationRepository;
 import org.bgu.oauth.service.BguTokenStore;
@@ -23,10 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
 public class AuthController {
 
-	private final Logger logger = LogManager.getLogger(getClass());
 	private final BguClientRegistrationRepository clientRegistrationRepo;
 	private final OAuth2LoginUtil loginUtil;
 	private final BguTokenStore tokenStore;
@@ -47,11 +42,9 @@ public class AuthController {
 		final ClientRegistration registration = clientRegistrationRepo.findByRegistrationId(registrationId);
 		if (registration == null)
 			throw new InvalidClientRegistrationException();
-		logger.log(LoggerLevel.OAUTH, "Client registration found!");
 
 		// Given a valid ClientRegistration, contact Github servers for OAuth token
 		OAuth2AccessToken accessToken = loginUtil.retrieveOAuth2AccessToken(registration, code, state);
-
 
 		OAuth2Authentication authentication = loginUtil.attemptAuthentication(registration, accessToken);
 		accessToken = tokenEnhancer.enhance(accessToken, authentication);
@@ -64,15 +57,4 @@ public class AuthController {
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * Helper method to add OAuth2AccessToken to request 
-	 * @return the {@link OAuth2AccessToken}
-	 */
-//	private HttpHeaders getAuthorizationHeader(final OAuth2AccessToken token) {
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-//		headers.add("Authorization", "bearer " + token.getValue());
-//		return headers;
-//	}
 }
